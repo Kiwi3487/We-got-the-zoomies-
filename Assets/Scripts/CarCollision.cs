@@ -41,10 +41,14 @@ public class CarCollision : MonoBehaviour
             Debug.Log("Car on barrier");
         }
     }
-
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Barrier"))
+        if (collision.CompareTag("Road"))
+        {
+            Debug.Log("Car on road");
+        }
+        else if (collision.CompareTag("Barrier"))
         {
             Debug.Log("Trigger on");
         }

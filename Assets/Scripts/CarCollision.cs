@@ -6,10 +6,13 @@ using UnityEngine;
 public class CarCollision : MonoBehaviour
 {
     Rigidbody2D rb;
+
+    private CarMovement movement;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        movement = GetComponent <CarMovement>();
     }
 
     // Update is called once per frame
@@ -17,40 +20,12 @@ public class CarCollision : MonoBehaviour
     {
         
     }
-    
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        /*if (collision.gameObject.tag == "Barrier")
-        {
-            rb.velocity = -rb.velocity * 2f;
-        }
-        */
-    }
 
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Barrier")
-        {
-            Debug.Log("Car no hit barrier");
-        }
-    }
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Barrier")
-        {
-            Debug.Log("Car on barrier");
-        }
-    }
-    
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Road"))
+        if (collision.tag == "BoostPad")
         {
-            Debug.Log("Car on road");
-        }
-        else if (collision.CompareTag("Barrier"))
-        {
-            Debug.Log("Trigger on");
+            movement.ApplySpeedBoost();
         }
     }
 }

@@ -15,6 +15,9 @@ public class CarMovement : MonoBehaviour
     [SerializeField] float maxSpeedOffRoad;
     [SerializeField] float maxSpeedWhileDrifting;
     [SerializeField] float maxSpeedWithBoost;
+    public int currentLap = 0;
+
+    [SerializeField] private ParticleSystem SmokeParticle;
 
     float steeringInput;
     float horizontalInput;
@@ -33,6 +36,8 @@ public class CarMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        
+        SmokeParticle.gameObject.SetActive(false);
         
     }
 
@@ -91,18 +96,31 @@ public class CarMovement : MonoBehaviour
             {
                 ActivateDrift();
             }
-            else if (!isDrifting && driftActivated && steeringInput == 0)
+            else if ((!isDrifting && driftActivated) || steeringInput == 0)
             {
                 DeactivateDrift();
             }
 
             if (driftActivated)
             {
-                
+                if (driftBoostTimer > 5f)
+                {
+                    SmokeParticle.startColor = Color.yellow;
+                }
+                else
+                {
+                    SmokeParticle.startColor = Color.grey;
+                }
+
+                driftBoostTimer += 0.1f;
             }
             else
             {
-                
+                if (driftBoostTimer > 5f)
+                {
+                    ApplySpeedBoost();
+                }
+                driftBoostTimer = 0;
             }
        // }
      //  else
@@ -121,6 +139,7 @@ public class CarMovement : MonoBehaviour
         driftPower = 0.9f;
         steeringPower = 2.5f;
         driftActivated = true;
+        SmokeParticle.gameObject.SetActive(true);
     }
 
     void DeactivateDrift()
@@ -128,6 +147,7 @@ public class CarMovement : MonoBehaviour
         driftPower = 0.5f;
         steeringPower = 1.5f;
         driftActivated = false;
+        SmokeParticle.gameObject.SetActive(false);
     }
 
     void AdjustSpeedForOffRoad()
